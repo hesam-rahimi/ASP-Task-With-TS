@@ -35,10 +35,6 @@ function App() {
   const [state, setState] = useState<TState>({ left: sorted, right: {} });
   const [checked, setChecked] = useState<TCheck>({ left: {}, right: {} });
 
-  useEffect(() => {
-    console.log(checked);
-  }, [checked]);
-
   return (
     <div className="bg-slate-500 w-full flex min-h-dvh [&>*]:bg-white p-5 gap-4 [&>*]:flex-1 [&>*]:rounded-lg">
       <LeftSide setChecked={setChecked} checked={checked} state={state} setState={setState} />

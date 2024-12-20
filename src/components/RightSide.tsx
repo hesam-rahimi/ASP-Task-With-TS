@@ -1,11 +1,21 @@
 import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
 import { TCheck, TItem, TProps } from "../App";
 import { ChevronIcon } from "../icons";
+import { groupByUniqueId, grouping } from "../helper";
 
 const RightSide = ({ state, setState, checked, setChecked }: TProps & { checked: TCheck; setChecked: Dispatch<SetStateAction<TCheck>> }) => {
   const submitHandler = () => {
-    const leftData = { ...state.left };
-    const rightData = { ...state.right };
+    const leftData = groupByUniqueId({ ...state.left });
+    const rightData = groupByUniqueId({ ...state.right });
+
+    Object.entries(checked.right).forEach((item) => {
+      if (item[1]) {
+        leftData[item[0]] = rightData[item[0]];
+        delete rightData[item[0]];
+      }
+    });
+    setChecked((prev) => ({ left: prev.left, right: {} }));
+    setState({ left: grouping(leftData), right: grouping(rightData) });
   };
 
   return (

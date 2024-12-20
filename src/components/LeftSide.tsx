@@ -1,11 +1,21 @@
-import { Fragment } from "react/jsx-runtime";
 import { TCheck, TItem, TProps } from "../App";
 import { ChevronIcon } from "../icons";
-import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useRef } from "react";
+import { groupByUniqueId, grouping } from "../helper";
 
 const LeftSide = ({ state, setState, checked, setChecked }: TProps & { checked: TCheck; setChecked: Dispatch<SetStateAction<TCheck>> }) => {
   const submitHandler = () => {
-    console.log(checked);
+    const leftData = groupByUniqueId({ ...state.left });
+    const rightData = groupByUniqueId({ ...state.right });
+
+    Object.entries(checked.left).forEach((item) => {
+      if (item[1]) {
+        rightData[item[0]] = leftData[item[0]];
+        delete leftData[item[0]];
+      }
+    });
+    setChecked((prev) => ({ left: {}, right: prev.right }));
+    setState({ left: grouping(leftData), right: grouping(rightData) });
   };
 
   return (
